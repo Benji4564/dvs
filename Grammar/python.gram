@@ -115,24 +115,31 @@ simple_stmt[stmt_ty] (memo):
     | e=star_expressions { _PyAST_Expr(e, EXTRA) }
     | &'return' return_stmt
     | &('import' | 'from') import_stmt
+    | &('beziehe' | 'von' ) import_stmt
     | &'raise' raise_stmt
     | 'pass' { _PyAST_Pass(EXTRA) }
     | &'del' del_stmt
     | &'yield' yield_stmt
+    | &'momentanwertausgabe' yield_stmt
     | &'assert' assert_stmt
     | 'break' { _PyAST_Break(EXTRA) }
     | 'continue' { _PyAST_Continue(EXTRA) }
     | &'global' global_stmt
+    | &'weltweit' global_stmt
     | &'nonlocal' nonlocal_stmt
 
 compound_stmt[stmt_ty]:
     | &('def' | '@' | ASYNC) function_def
+    | &('definiere' | '@' | ASYNC) function_def
     | &'if' if_stmt
+    | &'wenn' if_stmt
     | &('class' | '@') class_def
     | &('with' | ASYNC) with_stmt
     | &('for' | ASYNC) for_stmt
+    | &('lass' | ASYNC) for_stmt
     | &'try' try_stmt
     | &'while' while_stmt
+    | &'derweil' while_stmt
     | match_stmt
 
 # SIMPLE STATEMENTS
@@ -180,8 +187,15 @@ raise_stmt[stmt_ty]:
     | 'raise' a=expression b=['from' z=expression { z }] { _PyAST_Raise(a, b, EXTRA) }
     | 'raise' { _PyAST_Raise(NULL, NULL, EXTRA) }
 
-global_stmt[stmt_ty]: 'global' a[asdl_expr_seq*]=','.NAME+ {
+global_stmt[stmt_ty]: 
+    |'weltweit' a[asdl_expr_seq*]=','.NAME+ {
     _PyAST_Global(CHECK(asdl_identifier_seq*, _PyPegen_map_names_to_ids(p, a)), EXTRA) }
+
+
+    |'global' a[asdl_expr_seq*]=','.NAME+ {
+    _PyAST_Global(CHECK(asdl_identifier_seq*, _PyPegen_map_names_to_ids(p, a)), EXTRA) }
+
+
 
 nonlocal_stmt[stmt_ty]: 'nonlocal' a[asdl_expr_seq*]=','.NAME+ {
     _PyAST_Nonlocal(CHECK(asdl_identifier_seq*, _PyPegen_map_names_to_ids(p, a)), EXTRA) }
@@ -208,6 +222,10 @@ import_from[stmt_ty]:
     | 'from' a=('.' | '...')* b=dotted_name 'import' c=import_from_targets {
         _PyAST_ImportFrom(b->v.Name.id, c, _PyPegen_seq_count_dots(a), EXTRA) }
     | 'from' a=('.' | '...')+ 'import' b=import_from_targets {
+        _PyAST_ImportFrom(NULL, b, _PyPegen_seq_count_dots(a), EXTRA) }
+    | 'von' a=('.' | '...')* b=dotted_name 'beziehe' c=import_from_targets {
+        _PyAST_ImportFrom(b->v.Name.id, c, _PyPegen_seq_count_dots(a), EXTRA) }
+    | 'von' a=('.' | '...')+ 'beziehe' b=import_from_targets {
         _PyAST_ImportFrom(NULL, b, _PyPegen_seq_count_dots(a), EXTRA) }
 import_from_targets[asdl_alias_seq*]:
     | '(' a=import_from_as_names [','] ')' { a }
@@ -280,6 +298,10 @@ function_def_raw[stmt_ty]:
                             (params) ? params : CHECK(arguments_ty, _PyPegen_empty_arguments(p)),
                             b, NULL, a, NEW_TYPE_COMMENT(p, tc), EXTRA)
         ) }
+    | 'definiere' n=NAME &&'(' params=[params] ')' a=['->' z=expression { z }] &&':' tc=[func_type_comment] b=block {
+        _PyAST_FunctionDef(n->v.Name.id,
+                        (params) ? params : CHECK(arguments_ty, _PyPegen_empty_arguments(p)),
+                        b, NULL, a, NEW_TYPE_COMMENT(p, tc), EXTRA) }
 
 # Function parameters
 # -------------------
@@ -361,11 +383,17 @@ if_stmt[stmt_ty]:
     | 'if' a=named_expression ':' b=block c=elif_stmt {
         _PyAST_If(a, b, CHECK(asdl_stmt_seq*, _PyPegen_singleton_seq(p, c)), EXTRA) }
     | 'if' a=named_expression ':' b=block c=[else_block] { _PyAST_If(a, b, c, EXTRA) }
+    | 'wenn' a=named_expression ':' b=block c=elif_stmt {
+        _PyAST_If(a, b, CHECK(asdl_stmt_seq*, _PyPegen_singleton_seq(p, c)), EXTRA) }
+    | 'wenn' a=named_expression ':' b=block c=[else_block] { _PyAST_If(a, b, c, EXTRA) }
 elif_stmt[stmt_ty]:
     | invalid_elif_stmt
     | 'elif' a=named_expression ':' b=block c=elif_stmt {
         _PyAST_If(a, b, CHECK(asdl_stmt_seq*, _PyPegen_singleton_seq(p, c)), EXTRA) }
     | 'elif' a=named_expression ':' b=block c=[else_block] { _PyAST_If(a, b, c, EXTRA) }
+    | 'alternativ' a=named_expression ':' b=block c=elif_stmt {
+        _PyAST_If(a, b, CHECK(asdl_stmt_seq*, _PyPegen_singleton_seq(p, c)), EXTRA) }
+    | 'alternativ' a=named_expression ':' b=block c=[else_block] { _PyAST_If(a, b, c, EXTRA) }
 else_block[asdl_stmt_seq*]:
     | invalid_else_stmt
     | 'else' &&':' b=block { b }
@@ -376,6 +404,7 @@ else_block[asdl_stmt_seq*]:
 while_stmt[stmt_ty]:
     | invalid_while_stmt
     | 'while' a=named_expression ':' b=block c=[else_block] { _PyAST_While(a, b, c, EXTRA) }
+    | 'derweil' a=named_expression ':' b=block c=[else_block] { _PyAST_While(a, b, c, EXTRA) }
 
 # For statement
 # -------------
@@ -383,6 +412,8 @@ while_stmt[stmt_ty]:
 for_stmt[stmt_ty]:
     | invalid_for_stmt
     | 'for' t=star_targets 'in' ~ ex=star_expressions ':' tc=[TYPE_COMMENT] b=block el=[else_block] {
+        _PyAST_For(t, ex, b, el, NEW_TYPE_COMMENT(p, tc), EXTRA) }
+    | 'lass' t=star_targets 'inwendig' ~ ex=star_expressions ':' tc=[TYPE_COMMENT] b=block el=[else_block] {
         _PyAST_For(t, ex, b, el, NEW_TYPE_COMMENT(p, tc), EXTRA) }
     | ASYNC 'for' t=star_targets 'in' ~ ex=star_expressions ':' tc=[TYPE_COMMENT] b=block el=[else_block] {
         CHECK_VERSION(stmt_ty, 5, "Async for loops are", _PyAST_AsyncFor(t, ex, b, el, NEW_TYPE_COMMENT(p, tc), EXTRA)) }
@@ -492,6 +523,7 @@ literal_pattern[pattern_ty]:
     | value=complex_number { _PyAST_MatchValue(value, EXTRA) }
     | value=strings { _PyAST_MatchValue(value, EXTRA) }
     | 'None' { _PyAST_MatchSingleton(Py_None, EXTRA) }
+    | 'Wahr' { _PyAST_MatchSingleton(Py_True, EXTRA) }
     | 'True' { _PyAST_MatchSingleton(Py_True, EXTRA) }
     | 'False' { _PyAST_MatchSingleton(Py_False, EXTRA) }
 
@@ -501,6 +533,7 @@ literal_expr[expr_ty]:
     | complex_number
     | strings
     | 'None' { _PyAST_Constant(Py_None, NULL, EXTRA) }
+    | 'Wahr' { _PyAST_Constant(Py_True, NULL, EXTRA) }
     | 'True' { _PyAST_Constant(Py_True, NULL, EXTRA) }
     | 'False' { _PyAST_Constant(Py_False, NULL, EXTRA) }
 
@@ -647,6 +680,8 @@ expression[expr_ty] (memo):
 yield_expr[expr_ty]:
     | 'yield' 'from' a=expression { _PyAST_YieldFrom(a, EXTRA) }
     | 'yield' a=[star_expressions] { _PyAST_Yield(a, EXTRA) }
+    | 'momentanwertausgabe' 'from' a=expression { _PyAST_YieldFrom(a, EXTRA) }
+    | 'momentanwertausgabe' a=[star_expressions] { _PyAST_Yield(a, EXTRA) }
 
 star_expressions[expr_ty]:
     | a=star_expression b=(',' c=star_expression { c })+ [','] {
@@ -804,6 +839,7 @@ slice[expr_ty]:
 
 atom[expr_ty]:
     | NAME
+    | 'Wahr' { _PyAST_Constant(Py_True, NULL, EXTRA) }    
     | 'True' { _PyAST_Constant(Py_True, NULL, EXTRA) }
     | 'False' { _PyAST_Constant(Py_False, NULL, EXTRA) }
     | 'None' { _PyAST_Constant(Py_None, NULL, EXTRA) }

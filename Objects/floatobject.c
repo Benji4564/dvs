@@ -1890,7 +1890,7 @@ static PyNumberMethods float_as_number = {
 
 PyTypeObject PyFloat_Type = {
     PyVarObject_HEAD_INIT(&PyType_Type, 0)
-    "float",
+    "Fließkommazahl",
     sizeof(PyFloatObject),
     0,
     (destructor)float_dealloc,                  /* tp_dealloc */

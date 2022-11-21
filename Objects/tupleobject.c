@@ -843,7 +843,7 @@ static PyObject *tuple_iter(PyObject *seq);
 
 PyTypeObject PyTuple_Type = {
     PyVarObject_HEAD_INIT(&PyType_Type, 0)
-    "tuple",
+    "Geschlossene Sammlung",
     sizeof(PyTupleObject) - sizeof(PyObject *),
     sizeof(PyObject *),
     (destructor)tupledealloc,                   /* tp_dealloc */

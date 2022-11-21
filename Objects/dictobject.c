@@ -3781,7 +3781,7 @@ PyDoc_STRVAR(dictionary_doc,
 
 PyTypeObject PyDict_Type = {
     PyVarObject_HEAD_INIT(&PyType_Type, 0)
-    "dict",
+    "Nachschlageverzeichnis",
     sizeof(PyDictObject),
     0,
     (destructor)dict_dealloc,                   /* tp_dealloc */

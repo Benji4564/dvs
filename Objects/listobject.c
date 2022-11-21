@@ -3072,7 +3072,7 @@ static PyMappingMethods list_as_mapping = {
 
 PyTypeObject PyList_Type = {
     PyVarObject_HEAD_INIT(&PyType_Type, 0)
-    "list",
+    "Reihe",
     sizeof(PyListObject),
     0,
     (destructor)list_dealloc,                   /* tp_dealloc */

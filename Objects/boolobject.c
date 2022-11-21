@@ -152,7 +152,7 @@ bool_dealloc(PyObject* Py_UNUSED(ignore))
 
 PyTypeObject PyBool_Type = {
     PyVarObject_HEAD_INIT(&PyType_Type, 0)
-    "bool",
+    "Wahrheitswert",
     sizeof(struct _longobject),
     0,
     bool_dealloc,                               /* tp_dealloc */
