@@ -11,7 +11,6 @@
 *.so.*
 *.dylib
 *.dSYM
-*.dll
 *.wasm
 *.orig
 *.pyc
