@@ -40,7 +40,6 @@ gmon.out
 .pytest_cache/
 .DS_Store
 
-*.exe
 
 # Ignore core dumps... but not Tools/msi/core/ or the like.
 core
@@ -106,7 +105,6 @@ PCbuild/*-pgi
 PCbuild/*-pgo
 PCbuild/*.VC.db
 PCbuild/*.VC.opendb
-PCbuild/amd64/
 PCbuild/arm32/
 PCbuild/arm64/
 PCbuild/obj/
