@@ -107,7 +107,6 @@ PCbuild/*.VC.opendb
 PCbuild/arm32/
 PCbuild/arm64/
 PCbuild/obj/
-PCbuild/win32/
 Tools/unicode/data/
 /autom4te.cache
 /build/
