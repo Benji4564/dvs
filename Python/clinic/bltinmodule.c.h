@@ -885,7 +885,7 @@ PyDoc_STRVAR(builtin_print__doc__,
 "    whether to forcibly flush the stream.");
 
 #define BUILTIN_PRINT_METHODDEF    \
-    {"print", _PyCFunction_CAST(builtin_print), METH_FASTCALL|METH_KEYWORDS, builtin_print__doc__},
+    {"drucke", _PyCFunction_CAST(builtin_print), METH_FASTCALL|METH_KEYWORDS, builtin_print__doc__},
 
 static PyObject *
 builtin_print_impl(PyObject *module, PyObject *args, PyObject *sep,
@@ -979,7 +979,7 @@ PyDoc_STRVAR(builtin_input__doc__,
 "On *nix systems, readline is used if available.");
 
 #define BUILTIN_INPUT_METHODDEF    \
-    {"input", _PyCFunction_CAST(builtin_input), METH_FASTCALL, builtin_input__doc__},
+    {"eingabe", _PyCFunction_CAST(builtin_input), METH_FASTCALL, builtin_input__doc__},
 
 static PyObject *
 builtin_input_impl(PyObject *module, PyObject *prompt);
@@ -990,7 +990,7 @@ builtin_input(PyObject *module, PyObject *const *args, Py_ssize_t nargs)
     PyObject *return_value = NULL;
     PyObject *prompt = NULL;
 
-    if (!_PyArg_CheckPositional("input", nargs, 0, 1)) {
+    if (!_PyArg_CheckPositional("eingabe", nargs, 0, 1)) {
         goto exit;
     }
     if (nargs < 1) {

@@ -93,6 +93,7 @@ __all__ = [
     "uniform",
     "vonmisesvariate",
     "weibullvariate",
+    "rainerZufall",
 ]
 
 NV_MAGICCONST = 4 * _exp(-0.5) / _sqrt(2.0)
@@ -845,9 +846,12 @@ class SystemRandom(Zufall):
 
     """
 
+
     def random(self):
         """Get the next random number in the range [0.0, 1.0)."""
         return (int.from_bytes(_urandom(7)) >> 3) * RECIP_BPF
+    def rainerZufall(self):
+        return random()
 
     def getrandbits(self, k):
         """getrandbits(k) -> x.  Generates an int with k random bits."""
@@ -905,6 +909,7 @@ getstate = _inst.getstate
 setstate = _inst.setstate
 getrandbits = _inst.getrandbits
 randbytes = _inst.randbytes
+rainerZufall = SystemRandom().rainerZufall
 
 
 ## ------------------------------------------------------

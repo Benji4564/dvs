@@ -1959,7 +1959,7 @@ builtin_pow_impl(PyObject *module, PyObject *base, PyObject *exp,
 }
 
 /*[clinic input]
-print as builtin_print
+sag as builtin_print
 
     *args: object
     sep: object(c_default="Py_None") = ' '
