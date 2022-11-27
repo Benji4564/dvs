@@ -3037,9 +3037,10 @@ _PyBuiltin_Init(PyInterpreterState *interp)
     SETBUILTIN("None",                  Py_None);
     SETBUILTIN("Ellipsis",              Py_Ellipsis);
     SETBUILTIN("NotImplemented",        Py_NotImplemented);
-    SETBUILTIN("False",                 Py_False);
-    SETBUILTIN("True",                  Py_True);
+    SETBUILTIN("Falsch",                 Py_False);
+    SETBUILTIN("Wahr",                  Py_True);
     SETBUILTIN("bool",                  &PyBool_Type);
+    SETBUILTIN("wahrheitswert",                  &PyBool_Type);
     SETBUILTIN("memoryview",        &PyMemoryView_Type);
     SETBUILTIN("bytearray",             &PyByteArray_Type);
     SETBUILTIN("bytes",                 &PyBytes_Type);
@@ -3051,11 +3052,15 @@ _PyBuiltin_Init(PyInterpreterState *interp)
     SETBUILTIN("float",                 &PyFloat_Type);
     SETBUILTIN("frozenset",             &PyFrozenSet_Type);
     SETBUILTIN("property",              &PyProperty_Type);
-    SETBUILTIN("int",                   &PyLong_Type);
+    SETBUILTIN("ganzzahl",               &PyLong_Type);
+    SETBUILTIN("int",               &PyLong_Type);
     SETBUILTIN("list",                  &PyList_Type);
+    SETBUILTIN("liste",                  &PyList_Type);
     SETBUILTIN("map",                   &PyMap_Type);
+    SETBUILTIN("karte",                   &PyMap_Type);
     SETBUILTIN("object",                &PyBaseObject_Type);
     SETBUILTIN("range",                 &PyRange_Type);
+    SETBUILTIN("bereich",                 &PyRange_Type);
     SETBUILTIN("reversed",              &PyReversed_Type);
     SETBUILTIN("set",                   &PySet_Type);
     SETBUILTIN("slice",                 &PySlice_Type);
@@ -3064,6 +3069,7 @@ _PyBuiltin_Init(PyInterpreterState *interp)
     SETBUILTIN("super",                 &PySuper_Type);
     SETBUILTIN("tuple",                 &PyTuple_Type);
     SETBUILTIN("type",                  &PyType_Type);
+    SETBUILTIN("datentyp",                  &PyType_Type);
     SETBUILTIN("zip",                   &PyZip_Type);
     debug = PyBool_FromLong(config->optimization_level == 0);
     if (PyDict_SetItemString(dict, "__debug__", debug) < 0) {

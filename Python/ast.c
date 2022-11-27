@@ -49,8 +49,8 @@ validate_name(PyObject *name)
     assert(PyUnicode_Check(name));
     static const char * const forbidden[] = {
         "None",
-        "True",
-        "False",
+        "Wahr",
+        "Falsch",
         NULL
     };
     for (int i = 0; forbidden[i] != NULL; i++) {

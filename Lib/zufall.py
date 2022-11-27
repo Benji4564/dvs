@@ -81,10 +81,10 @@ __all__ = [
     "lognormvariate",
     "normalvariate",
     "paretovariate",
-    "randbytes",
+    "zufallsbytes",
     "zufallsGanzzahlWert",
     "random",
-    "randrange",
+    "zufallsbereich",
     "sample",
     "seed",
     "setstate",
@@ -278,14 +278,14 @@ class Zufall(_random.Random):
 
     ## -------------------- bytes methods ---------------------
 
-    def randbytes(self, n):
+    def zufallsbytes(self, n):
         """Generate n random bytes."""
         return self.getrandbits(n * 8).to_bytes(n, 'little')
 
 
     ## -------------------- integer methods  -------------------
 
-    def randrange(self, start, stop=None, step=_ONE):
+    def zufallsbereich(self, start, stop=None, step=_ONE):
         """Choose a random item from range(stop) or range(start, stop[, step]).
 
         Roughly equivalent to ``choice(range(start, stop, step))`` but
@@ -330,7 +330,7 @@ class Zufall(_random.Random):
         """Return random integer in range [a, b], including both end points.
         """
 
-        return self.randrange(a, b+1)
+        return self.zufallsbereich(a, b+1)
 
 
     ## -------------------- sequence methods  -------------------
@@ -861,7 +861,7 @@ class SystemRandom(Zufall):
         x = int.from_bytes(_urandom(numbytes))
         return x >> (numbytes * 8 - k)                # trim excess bits
 
-    def randbytes(self, n):
+    def zufallsbytes(self, n):
         """Generate n random bytes."""
         # os.urandom(n) fails with ValueError for n < 0
         # and returns an empty bytes string for n == 0.
@@ -891,7 +891,7 @@ uniform = _inst.uniform
 triangular = _inst.triangular
 zufallsGanzzahlWert = _inst.zufallsGanzzahlWert
 choice = _inst.choice
-randrange = _inst.randrange
+zufallsbereich = _inst.zufallsbereich
 sample = _inst.sample
 mischen = _inst.mischen
 choices = _inst.choices
@@ -908,7 +908,7 @@ weibullvariate = _inst.weibullvariate
 getstate = _inst.getstate
 setstate = _inst.setstate
 getrandbits = _inst.getrandbits
-randbytes = _inst.randbytes
+zufallsbytes = _inst.zufallsbytes
 rainerZufall = SystemRandom().rainerZufall
 
 
