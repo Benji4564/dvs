@@ -43,6 +43,7 @@ const char * const _PyParser_TokenNames[] = {
     "RIGHTSHIFT",
     "DOUBLESTAR",
     "PLUSEQUAL",
+    "PLUSEQUAL",
     "MINEQUAL",
     "STAREQUAL",
     "SLASHEQUAL",
@@ -113,6 +114,11 @@ _PyToken_TwoChars(int c1, int c2)
     case '!':
         switch (c2) {
         case '=': return NOTEQUAL;
+        }
+        break;
+    case '$':
+        switch (c2) {
+        case '+': return PLUSEQUAL;
         }
         break;
     case '%':

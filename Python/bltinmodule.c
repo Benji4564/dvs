@@ -2055,6 +2055,105 @@ builtin_print_impl(PyObject *module, PyObject *args, PyObject *sep,
 }
 
 
+
+
+
+
+static PyObject *
+builtin_druck_impl(PyObject *module, PyObject *args, PyObject *sep,
+                   PyObject *end, PyObject *file, int flush)
+/*[clinic end generated code: output=3cfc0940f5bc237b input=c143c575d24fe665]*/
+{
+    int i, err;
+
+    if (file == Py_None) {
+        PyThreadState *tstate = _PyThreadState_GET();
+        file = _PySys_GetAttr(tstate, &_Py_ID(stdout));
+        if (file == NULL) {
+            PyErr_SetString(PyExc_RuntimeError, "lost sys.stdout");
+            return NULL;
+        }
+
+        /* sys.stdout may be None when FILE* stdout isn't connected */
+        if (file == Py_None) {
+            Py_RETURN_NONE;
+        }
+    }
+
+    if (sep == Py_None) {
+        sep = NULL;
+    }
+    else if (sep && !PyUnicode_Check(sep)) {
+        PyErr_Format(PyExc_TypeError,
+                     "sep must be None or a string, not %.200s",
+                     Py_TYPE(sep)->tp_name);
+        return NULL;
+    }
+    if (end == Py_None) {
+        end = NULL;
+    }
+    else if (end && !PyUnicode_Check(end)) {
+        PyErr_Format(PyExc_TypeError,
+                     "end must be None or a string, not %.200s",
+                     Py_TYPE(end)->tp_name);
+        return NULL;
+    }
+
+    for (i = 0; i < PyTuple_GET_SIZE(args); i++) {
+        if (i > 0) {
+            if (sep == NULL) {
+                err = PyFile_WriteString(" ", file);
+            }
+            else {
+                err = PyFile_WriteObject(sep, file, Py_PRINT_RAW);
+            }
+            if (err) {
+                return NULL;
+            }
+        }
+        err = PyFile_WriteObject(PyTuple_GET_ITEM(args, i), file, Py_PRINT_RAW);
+        if (err) {
+            return NULL;
+        }
+    }
+
+    if (end == NULL) {
+        err = PyFile_WriteString("\n", file);
+    }
+    else {
+        err = PyFile_WriteObject(end, file, Py_PRINT_RAW);
+    }
+    if (err) {
+        return NULL;
+    }
+
+    if (flush) {
+        PyObject *tmp = PyObject_CallMethodNoArgs(file, &_Py_ID(flush));
+        if (tmp == NULL) {
+            return NULL;
+        }
+        Py_DECREF(tmp);
+    }
+
+    Py_RETURN_NONE;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*[clinic input]
 input as builtin_input
 
@@ -2978,6 +3077,7 @@ static PyMethodDef builtin_methods[] = {
     BUILTIN_ORD_METHODDEF
     BUILTIN_POW_METHODDEF
     BUILTIN_PRINT_METHODDEF
+    BUILTIN_DRUCK_METHODDEF
     BUILTIN_REPR_METHODDEF
     BUILTIN_ROUND_METHODDEF
     BUILTIN_SETATTR_METHODDEF

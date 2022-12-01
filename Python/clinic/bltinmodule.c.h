@@ -966,6 +966,114 @@ exit:
     return return_value;
 }
 
+
+
+
+
+PyDoc_STRVAR(builtin_druck__doc__,
+"drucke($module, /, *args, sep=\' \', end=\'\\n\', file=None, flush=False)\n"
+"--\n"
+"\n"
+"Prints the values to a stream, or to sys.stdout by default.\n"
+"\n"
+"  sep\n"
+"    string inserted between values, default a space.\n"
+"  end\n"
+"    string appended after the last value, default a newline.\n"
+"  file\n"
+"    a file-like object (stream); defaults to the current sys.stdout.\n"
+"  flush\n"
+"    whether to forcibly flush the stream.");
+
+#define BUILTIN_DRUCK_METHODDEF    \
+    {"drucke", _PyCFunction_CAST(builtin_druck), METH_FASTCALL|METH_KEYWORDS, builtin_druck__doc__},
+
+static PyObject *
+builtin_druck_impl(PyObject *module, PyObject *args, PyObject *sep,
+                   PyObject *end, PyObject *file, int flush);
+
+static PyObject *
+builtin_druck(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
+{
+    PyObject *return_value = NULL;
+    #if defined(Py_BUILD_CORE) && !defined(Py_BUILD_CORE_MODULE)
+
+    #define NUM_KEYWORDS 4
+    static struct {
+        PyGC_Head _this_is_not_used;
+        PyObject_VAR_HEAD
+        PyObject *ob_item[NUM_KEYWORDS];
+    } _kwtuple = {
+        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
+        .ob_item = { &_Py_ID(sep), &_Py_ID(end), &_Py_ID(file), &_Py_ID(flush), },
+    };
+    #undef NUM_KEYWORDS
+    #define KWTUPLE (&_kwtuple.ob_base.ob_base)
+
+    #else  // !Py_BUILD_CORE
+    #  define KWTUPLE NULL
+    #endif  // !Py_BUILD_CORE
+
+    static const char * const _keywords[] = {"sep", "end", "file", "flush", NULL};
+    static _PyArg_Parser _parser = {
+        .keywords = _keywords,
+        .fname = "print",
+        .kwtuple = KWTUPLE,
+    };
+    #undef KWTUPLE
+    PyObject *argsbuf[5];
+    Py_ssize_t noptargs = 0 + (kwnames ? PyTuple_GET_SIZE(kwnames) : 0) - 0;
+    PyObject *__clinic_args = NULL;
+    PyObject *sep = Py_None;
+    PyObject *end = Py_None;
+    PyObject *file = Py_None;
+    int flush = 0;
+
+    args = _PyArg_UnpackKeywordsWithVararg(args, nargs, NULL, kwnames, &_parser, 0, 0, 0, 0, argsbuf);
+    if (!args) {
+        goto exit;
+    }
+    __clinic_args = args[0];
+    if (!noptargs) {
+        goto skip_optional_kwonly;
+    }
+    if (args[1]) {
+        sep = args[1];
+        if (!--noptargs) {
+            goto skip_optional_kwonly;
+        }
+    }
+    if (args[2]) {
+        end = args[2];
+        if (!--noptargs) {
+            goto skip_optional_kwonly;
+        }
+    }
+    if (args[3]) {
+        file = args[3];
+        if (!--noptargs) {
+            goto skip_optional_kwonly;
+        }
+    }
+    flush = PyObject_IsTrue(args[4]);
+    if (flush < 0) {
+        goto exit;
+    }
+skip_optional_kwonly:
+    return_value = builtin_druck_impl(module, __clinic_args, sep, end, file, flush);
+
+exit:
+    Py_XDECREF(__clinic_args);
+    return return_value;
+}
+
+
+
+
+
+
+
+
 PyDoc_STRVAR(builtin_input__doc__,
 "input($module, prompt=None, /)\n"
 "--\n"

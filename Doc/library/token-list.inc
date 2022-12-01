@@ -133,6 +133,10 @@
 
    Token value for ``"+="``.
 
+.. data:: PLUSEQUAL
+
+   Token value for ``"$+"``.
+
 .. data:: MINEQUAL
 
    Token value for ``"-="``.
