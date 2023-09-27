@@ -1,6 +1,6 @@
-from abiadt import AbiAdt
+from adt import adt
 
-class Stapel(AbiAdt):
+class Stapel(adt):
 
     def __init__(self):
         super().__init__()

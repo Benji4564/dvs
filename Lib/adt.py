@@ -1,4 +1,4 @@
-class AbiAdt:
+class adt:
 
     def __init__(self):
         self._elemente = list()

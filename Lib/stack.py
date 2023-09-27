@@ -1,4 +1,4 @@
-from .abiadt import AbiAdt
+from .adt import AbiAdt
 
 class Stack(AbiAdt):
 

@@ -1,25 +1,25 @@
 
-from .abiadt import AbiAdt
+from .adt import adt
 
-class DynArray(AbiAdt):
+class DynArray(adt):
 
     def __init__(self):
         super().__init__()
 
-    def getItem(self, index):
+    def erhalteGegenstand(self, index):
         return self._elemente[index]
 
-    def append(self, neue):
+    def hinzufügen(self, neue):
         self._elemente.append( neue)
 
-    def insertAt(self, index, neue):
+    def einfügen(self, index, neue):
         self._elemente.insert(index, neue)
 
-    def setItem(self, index, neue):
+    def setzeGegenstand(self, index, neue):
         self._elemente[index] = neue
 
-    def delete(self, index):
+    def löschen(self, index):
         self._elemente.pop(index)
 
-    def getLength(self):
+    def erhalteLänge(self):
         return len(self._elemente)
